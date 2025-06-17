@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Product Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f1f1;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .image-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .image-gallery img {
+      width: calc(25% - 10px);
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    p {
+      margin: 6px 0;
+    }
+
+    .section-title {
+      margin-top: 20px;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .qr-section {
+      margin-top: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .image-gallery img {
+        width: calc(50% - 10px);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .image-gallery img {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="details">Loading...</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+  <script>
+    const container = document.getElementById("details");
+    const product = JSON.parse(localStorage.getItem("selectedProduct"));
+
+    if (!product) {
+      container.innerHTML = "<p>No product data found. Go back and select a product.</p>";
+      throw new Error("No product found in localStorage.");
+    }
+
+    const groceryTitle = product.title || "Grocery Product";
+    const groceryBrand = product.brand || "Grocery Brand";
+    const groceryCategory = "Grocery";
+
+    const imagesHTML = `
+      <div class="image-gallery">
+        ${Array(4).fill(product.thumbnail).map(src => `<img src="${src}" alt="${groceryTitle}" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">`).join('')}
+      </div>
+    `;
+
+    container.innerHTML = `
+      ${imagesHTML}
+      <h2>${groceryTitle}</h2>
+      <p><strong>Description:</strong> ${product.description || "Fresh and high-quality grocery item."}</p>
+      <p><strong>Brand:</strong> ${groceryBrand}</p>
+      <p><strong>Category:</strong> ${groceryCategory}</p>
+      <p><strong>Price:</strong> $${product.price}</p>
+      <p><strong>Discount:</strong> ${product.discountPercentage || 0}%</p>
+      <p><strong>Rating:</strong> ${product.rating} ⭐</p>
+      <p><strong>Stock:</strong> ${product.stock}</p>
+      <p><strong>SKU:</strong> ${product.sku}</p>
+      <p><strong>Weight:</strong> ${product.weight}</p>
+      <p><strong>Dimensions:</strong> ${product.dimensions}</p>
+      <p><strong>Warranty:</strong> ${product.warranty}</p>
+      <p><strong>Shipping:</strong> ${product.shippingInfo}</p>
+      <p><strong>Availability:</strong> ${product.availability}</p>
+      <p><strong>Return Policy:</strong> ${product.returnPolicy}</p>
+      <p><strong>Minimum Order:</strong> ${product.minOrder}</p>
+
+      <div class="qr-section">
+        <h4>Scan QR Code to View Product</h4>
+        <canvas id="qr-code"></canvas>
+      </div>
+
+      <a href="index.html" class="back-btn">← Back to Products</a>
+    `;
+
+    const qrCanvas = document.getElementById("qr-code");
+    const productUrl = `${window.location.origin}/details.html?title=${encodeURIComponent(groceryTitle)}`;
+
+    QRCode.toCanvas(qrCanvas, productUrl, { width: 180 }, function (error) {
+      if (error) console.error(error);
+      console.log("QR Code generated for:", productUrl);
+    });
+  </script>
+
+</body>
+</html>

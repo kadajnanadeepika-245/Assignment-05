@@ -1,0 +1,75 @@
+/* Grid styling */
+#products {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 20px;
+  animation: fadeInGrid 1s ease-in-out;
+}
+
+@keyframes fadeInGrid {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product {
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInCard 0.8s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.product:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.product::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.product:hover::after {
+  opacity: 1;
+}
+
+.product img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.product:hover img {
+  transform: scale(1.1) rotate(-1deg);
+  opacity: 0.95;
+}
